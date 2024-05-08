@@ -1,9 +1,9 @@
 package br.com.ekom.hateoas.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
 import br.com.ekom.hateoas.entities.Departamento;
 
-public interface DepartamentoRepository extends JpaRepository<Departamento,Long> {
+public interface DepartamentoRepository extends CrudRepository<Departamento,Long> {
 
 }

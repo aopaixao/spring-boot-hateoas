@@ -1,6 +1,6 @@
 package br.com.ekom.hateoas.services;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +14,12 @@ public class DepartamentoService {
 	@Autowired
 	DepartamentoRepository departamentoRepository;
 	
-	public List<Departamento> findAll(){
+	public Iterable<Departamento> findAll(){
 		return departamentoRepository.findAll();
 	}
 	
-	public Departamento findById(Long id) {
-		
-		return departamentoRepository.findById(id)
-		        .orElseThrow(() -> new NoSuchElementException("Departamento", id));
+	public Optional<Departamento> findById(Long id) {
+		return Optional.ofNullable(departamentoRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Departamento", id)));
 		        
 	}
 	
@@ -37,7 +35,7 @@ public class DepartamentoService {
 		if(Departamento == null)
 			return false;
 		
-		Departamento DepartamentoExistente = findById(Departamento.getDepartamentoId());
+		Departamento DepartamentoExistente = findById(Departamento.getDepartamentoId()).get();
 		
 		if(DepartamentoExistente == null)
 			return false;
@@ -45,7 +43,7 @@ public class DepartamentoService {
 		departamentoRepository.delete(Departamento);
 		
 		Departamento DepartamentoContinuaExistindo = 
-				findById(Departamento.getDepartamentoId());
+				findById(Departamento.getDepartamentoId()).get();
 		
 		if(DepartamentoContinuaExistindo == null)
 			return true;

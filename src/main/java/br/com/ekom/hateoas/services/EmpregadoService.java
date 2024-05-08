@@ -1,6 +1,6 @@
 package br.com.ekom.hateoas.services;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +14,12 @@ public class EmpregadoService {
 	@Autowired
 	EmpregadoRepository empregadoRepository;
 	
-	public List<Empregado> findAll(){
+	public Iterable<Empregado> findAll(){
 		return empregadoRepository.findAll();
 	}
 	
-	public Empregado findById(Long id) {
-		
-		return empregadoRepository.findById(id)
-		        .orElseThrow(() -> new NoSuchElementException("Empregado", id));
+	public Optional<Empregado> findById(Long id) {
+		return Optional.ofNullable(empregadoRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Empregado", id)));
 		        
 	}
 	
@@ -37,7 +35,7 @@ public class EmpregadoService {
 		if(Empregado == null)
 			return false;
 		
-		Empregado EmpregadoExistente = findById(Empregado.getEmpregadoId());
+		Empregado EmpregadoExistente = findById(Empregado.getEmpregadoId()).get();
 		
 		if(EmpregadoExistente == null)
 			return false;
@@ -45,7 +43,7 @@ public class EmpregadoService {
 		empregadoRepository.delete(Empregado);
 		
 		Empregado EmpregadoContinuaExistindo = 
-				findById(Empregado.getEmpregadoId());
+				findById(Empregado.getEmpregadoId()).get();
 		
 		if(EmpregadoContinuaExistindo == null)
 			return true;
